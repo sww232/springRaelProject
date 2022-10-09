@@ -1,0 +1,29 @@
+package com.example.rael.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.rael.dto.SearchDTO;
+import com.example.rael.dto.StockSelectDTO;
+import com.example.rael.mapper.StockMapper;
+import com.example.rael.paging.Pagination;
+import com.example.rael.paging.PagingResponse;
+
+@Service
+public class StockServiceImpl implements StockService {
+	
+	@Autowired
+	StockMapper stockMapper;
+	
+	
+	public PagingResponse<StockSelectDTO> SelectStock(SearchDTO searchDTO){
+		int count = stockMapper.StockCount();
+		Pagination pagination = new Pagination(count, searchDTO);
+		searchDTO.setPagination(pagination);
+        List<StockSelectDTO> list = stockMapper.SelectStock(searchDTO);
+		return new PagingResponse<>(list, pagination);
+	}
+	
+}

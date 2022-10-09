@@ -1,0 +1,10 @@
+package com.example.rael.service;
+
+import com.example.rael.dto.SearchDTO;
+import com.example.rael.dto.StockSelectDTO;
+import com.example.rael.paging.PagingResponse;
+
+public interface StockService {
+	PagingResponse<StockSelectDTO> SelectStock(SearchDTO searchDTO);
+	PagingResponse<StockSelectDTO> SelectStockCategory(SearchDTO searchDTO, int categorynum);
+}

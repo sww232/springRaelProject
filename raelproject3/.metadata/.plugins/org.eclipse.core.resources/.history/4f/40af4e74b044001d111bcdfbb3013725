@@ -1,0 +1,7 @@
+package com.example.rael.dto;
+
+public class StockPriceDTO {
+	String STOCKNUM;
+	String STOCKNAME;
+	int STOCKPRICE;
+}

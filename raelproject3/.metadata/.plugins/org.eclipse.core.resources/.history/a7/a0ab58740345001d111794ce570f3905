@@ -1,0 +1,22 @@
+@charset "UTF-8";
+
+nav{
+	background-color: #DBEBF4;
+	position: fixed;
+	z-index: 1;
+	width: 100%;
+}
+
+nav ul li{
+	font-size: 14px;
+	text-transform: uppercase;
+	display: inline-block;
+	margin: 0 15px;
+	padding: 0;
+}
+
+nav ul{
+	text-align: center;
+	margin: 0 auto;
+	padding: 30px
+}

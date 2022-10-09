@@ -1,0 +1,4 @@
+#Mybatis
+mybatis.mapper-locations = classpath:com/example/mapper/*.xml
+logging.level.org.srpingframework=debug
+logging.level.org.springframework.web=debug

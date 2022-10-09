@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.rael.mapper.ProductMapper">
+	<select id="AllCount" resultType="int">
+	<![CDATA[
+		SELECT 
+		    COUNT(1)
+		FROM 
+		    RAEL_PRODUCT_CATEGORY A,
+		    RAEL_PRODUCT B,
+		    RAEL_PRODUCT_DETAIL C
+		WHERE
+		    A.PRODUCT_CATEGORY_NUM = B.PRODUCT_CATEGORY_NUM AND
+		    B.PRODUCT_NUM = C.PRODUCT_NUM
+	]]>
+	</select>
+	
+	<select id="SelectAllProduct" parameterType="com.example.rael.dto.SearchDTO" resultType="com.example.rael.dto.ProductAllSelectDTO">
+	<![CDATA[
+		SELECT 
+		    A.PRODUCT_CATEGORY_NAME AS PRODUCTCATEGORYNAME,
+		    B.PRODUCT_NUM AS PRODUCTNUM,
+		    C.PRODUCT_BY_NUM AS PRODUCTBYNUM,
+		    B.PRODUCT_NAME AS PRODUCTNAME,
+		    C.PRODUCT_VENDOR AS PRODUCTVENDOR,
+		    C.PRODUCT_COMPANY AS PRODUCTCOMPANY,
+		    NVL(C.PRODUCT_COLOR, 'N/A') AS PRODUCTCOLOR,
+		    C.PRODUCT_PRICE_INBOUND AS PRODUCTPRICEINBOUND,
+		    C.PRODUCT_PRICE_OUTBOUND AS PRODUCTPRICEOUTBOUND,
+		    NVL(C.PRODUCT_LENGTH, '0') AS PRODUCTLENGTH,
+		    NVL(C.PRODUCT_WEIGHT, '0') AS PRODUCTWEIGHT,
+		    NVL(C.PRODUCT_VOLT, 'N/A') AS PRODUCTVOLT,
+		    C.PRODUCT_APPEND_DATE AS APPENDDATE,
+		    C.PRODUCT_UPDATE_DATE AS UPDATEDATE,
+		    C.PRODUCT_DESCRIPTION AS PRODUCTDESCRIPTION
+		FROM 
+		    RAEL_PRODUCT_CATEGORY A,
+		    RAEL_PRODUCT B,
+		    RAEL_PRODUCT_DETAIL C
+		WHERE
+		    A.PRODUCT_CATEGORY_NUM = B.PRODUCT_CATEGORY_NUM AND
+		    B.PRODUCT_NUM = C.PRODUCT_NUM
+		ORDER BY 
+			A.PRODUCT_CATEGORY_NUM, B.PRODUCT_NUM, C.PRODUCT_BY_NUM
+		
+		OFFSET #{pagination.limitStart} ROWS FETCH NEXT #{recordSize} ROW ONLY
+	]]>
+	</select>
+	
+	<select id="SelectCategoryNums" resultType="string">
+	<![CDATA[
+		SELECT
+			PRODUCT_CATEGORY_NUM||'/'||PRODUCT_CATEGORY_NAME
+		FROM
+			RAEL_PRODUCT_CATEGORY
+		WHERE
+			MOD(PRODUCT_CATEGORY_NUM, 100) != 0
+		ORDER BY 
+			PRODUCT_CATEGORY_NUM
+	]]>
+	</select>	
+	
+	<select id="SelectProductNumSEQ" parameterType="hashmap" resultType="string">
+	<![CDATA[
+		SELECT
+			LPAD(PRODUCT_CATEGORY_NUM,5,'0')||LPAD(PRODUCT_${categorynum}_SEQ.NEXTVAL,3,'0')
+		FROM
+			RAEL_PRODUCT_CATEGORY
+		WHERE
+			PRODUCT_CATEGORY_NUM = ${categorynum}
+	]]>
+	</select>
+	
+	<select id="SelectProductDetailLastByNumber" parameterType="hashmap" resultType="int">
+	<![CDATA[
+		SELECT NVL(MAX(A.PRODUCT_BY_NUM) + 1 ,1)
+		FROM 
+		    RAEL_PRODUCT_DETAIL A, 
+		    RAEL_PRODUCT B, 
+		    (SELECT PRODUCT_CATEGORY_NUM FROM RAEL_PRODUCT_CATEGORY WHERE PRODUCT_CATEGORY_NUM = #{categorynum}) C 
+		WHERE B.PRODUCT_CATEGORY_NUM = C.PRODUCT_CATEGORY_NUM
+		AND A.PRODUCT_NUM = B.PRODUCT_NUM
+		AND A.PRODUCT_NUM = #{productnum}
+	]]>
+	</select>
+	
+	<insert id="InsertProduct" parameterType="com.example.rael.dto.ProductDTO">
+		INSERT INTO 
+			RAEL_PRODUCT 
+		VALUES(
+			#{PRODUCTCATEGORYNUM},
+			#{PRODUCTNUM},
+			#{PRODUCTNAME}
+		)
+	</insert>
+	<insert id="InsertProductDetail" parameterType="com.example.rael.dto.ProductDetailDTO">
+		INSERT INTO
+			RAEL_PRODUCT_DETAIL
+		VALUES(
+			#{arg0},
+			#{arg1},
+			#{arg2.PRODUCTVENDOR},
+			#{arg2.PRODUCTCOMPANY},
+			#{arg2.PRODUCTCOLOR},
+			#{arg2.PRODUCTPRICEINBOUND},
+			#{arg2.PRODUCTPRICEOUTBOUND},
+			#{arg2.PRODUCTLENGTH},
+			#{arg2.PRODUCTWEIGHT},
+			#{arg2.PRODUCTVOLT},
+			SYSDATE,
+			SYSDATE,
+			#{arg2.PRODUCTDESCRIPTION}
+		)
+		
+	</insert>
+	<update id="UpdateProduct" parameterType="com.example.rael.dto.ProductDTO">
+	<![CDATA[
+		UPDATE
+			RAEL_PRODUCT 
+		SET
+			PRODUCT_NAME = #{arg1}
+		WHERE
+			PRODUCT_NUM = #{arg0}
+	]]>
+	</update>
+	<update id="UpdateProductDetail" parameterType="com.example.rael.dto.ProductDetailDTO">
+	<![CDATA[
+		UPDATE 
+			RAEL_PRODUCT_DETAIL 
+		SET
+			PRODUCT_VENDOR = 
+				CASE WHEN 
+					PRODUCT_VENDOR = #{arg2.PRODUCTVENDOR}
+				THEN
+					PRODUCT_VENDOR
+				ELSE
+					#{arg2.PRODUCTVENDOR}
+				END,
+				
+			PRODUCT_COMPANY = 
+				CASE WHEN 
+						PRODUCT_COMPANY = #{arg2.PRODUCTCOMPANY}
+					THEN
+						PRODUCT_COMPANY
+					ELSE
+						#{arg2.PRODUCTCOMPANY}
+					END,
+					
+			PRODUCT_COLOR = 
+				CASE WHEN 
+					PRODUCT_COLOR = #{arg2.PRODUCTCOLOR}
+				THEN
+					PRODUCT_COLOR
+				ELSE
+					#{arg2.PRODUCTCOLOR}
+				END,
+				
+			PRODUCT_PRICE_INBOUND = 
+				CASE WHEN 
+						PRODUCT_PRICE_INBOUND = #{arg2.PRODUCTPRICEINBOUND}
+					THEN
+						PRODUCT_PRICE_INBOUND
+					ELSE
+						#{arg2.PRODUCTPRICEINBOUND}
+					END,
+					
+			PRODUCT_PRICE_OUTBOUND = 
+				CASE WHEN 
+						PRODUCT_PRICE_OUTBOUND = #{arg2.PRODUCTPRICEOUTBOUND}
+					THEN
+						PRODUCT_PRICE_OUTBOUND
+					ELSE
+						#{arg2.PRODUCTPRICEOUTBOUND}
+					END,
+			PRODUCT_LENGTH = 
+				CASE WHEN 
+					PRODUCT_LENGTH = #{arg2.PRODUCTLENGTH}
+				THEN
+					PRODUCT_LENGTH
+				ELSE
+					#{arg2.PRODUCTLENGTH}
+				END,
+			PRODUCT_WEIGHT = 
+				CASE WHEN 
+					PRODUCT_WEIGHT = #{arg2.PRODUCTWEIGHT}
+				THEN
+					PRODUCT_WEIGHT
+				ELSE
+					#{arg2.PRODUCTWEIGHT}
+				END,
+			PRODUCT_VOLT = 
+				CASE WHEN 
+						PRODUCT_VOLT = #{arg2.PRODUCTVOLT}
+					THEN
+						PRODUCT_VOLT
+					ELSE
+						#{arg2.PRODUCTVOLT}
+					END,
+			PRODUCT_UPDATE_DATE = SYSDATE ,
+			PRODUCT_DESCRIPTION = 
+				CASE WHEN 
+						PRODUCT_DESCRIPTION = #{arg2.PRODUCTDESCRIPTION}
+					THEN
+						PRODUCT_DESCRIPTION
+					ELSE
+						#{arg2.PRODUCTDESCRIPTION}
+					END
+		WHERE
+			PRODUCT_NUM = #{arg0} AND
+			PRODUCT_BY_NUM = ${arg1}
+		
+	]]>
+	</update>
+	
+	<select id="SelectProductNames" parameterType="integer" resultType="String">
+	<![CDATA[
+		SELECT 
+	    	A.PRODUCT_NUM||'/'||A.PRODUCT_NAME
+		FROM
+		    RAEL_PRODUCT A, RAEL_PRODUCT_CATEGORY B
+		WHERE
+			B.PRODUCT_CATEGORY_NUM = #{arg0} AND 
+		    A.PRODUCT_CATEGORY_NUM = B.PRODUCT_CATEGORY_NUM
+		ORDER BY
+		    B.PRODUCT_CATEGORY_NUM, A.PRODUCT_NUM
+	]]>
+	</select>
+	
+	<select id="ProductCount" parameterType="integer" resultType="int">
+	<![CDATA[
+		SELECT
+			COUNT(1)
+		FROM
+			RAEL_PRODUCT
+		WHERE
+			PRODUCT_CATEGORY_NUM = #{arg0}
+	
+	]]>
+	</select>
+	<select id="ProductDetailCount" parameterType="integer" resultType="int">
+	<![CDATA[
+		SELECT
+			COUNT(1)
+		FROM
+			RAEL_PRODUCT A,
+			RAEL_PRODUCT_DETAIL B
+		WHERE
+			A.PRODUCT_NUM = B.PRODUCT_NUM AND
+			A.PRODUCT_CATEGORY_NUM = #{arg0}
+	
+	]]>
+	</select>
+	
+	<select id="SelectProduct" parameterType="com.example.rael.dto.SearchDTO" resultType="com.example.rael.dto.ProductDTO">
+	<![CDATA[
+		SELECT 
+			B.PRODUCT_CATEGORY_NUM AS PRODUCTCATEGORYNUM,
+			B.PRODUCT_CATEGORY_NAME AS PRODUCTCATEGORYNAME,
+			A.PRODUCT_NUM AS PRODUCTNUM,
+			A.PRODUCT_NAME AS PRODUCTNAME
+		FROM 
+			RAEL_PRODUCT A,
+			RAEL_PRODUCT_CATEGORY B
+		WHERE
+			A.PRODUCT_CATEGORY_NUM = B.PRODUCT_CATEGORY_NUM AND
+			B.PRODUCT_CATEGORY_NUM = #{arg1}
+		ORDER BY 
+			B.PRODUCT_CATEGORY_NUM, A.PRODUCT_NUM
+		OFFSET #{arg0.pagination.limitStart} ROWS FETCH NEXT #{arg0.recordSize} ROW ONLY
+		
+	]]>
+	</select>
+	<select id="SelectProductROW" parameterType="string" resultType="com.example.rael.dto.ProductDTO">
+	<![CDATA[
+		SELECT 
+			B.PRODUCT_CATEGORY_NUM AS PRODUCTCATEGORYNUM,
+			B.PRODUCT_CATEGORY_NAME AS PRODUCTCATEGORYNAME,
+			A.PRODUCT_NUM AS PRODUCTNUM,
+			A.PRODUCT_NAME AS PRODUCTNAME
+		FROM 
+			RAEL_PRODUCT A,
+			RAEL_PRODUCT_CATEGORY B
+		WHERE
+			A.PRODUCT_CATEGORY_NUM = B.PRODUCT_CATEGORY_NUM AND
+			A.PRODUCT_NUM = #{arg0}
+	]]>
+	</select>
+	<select id="SelectProductDetail" parameterType="com.example.rael.dto.SearchDTO" resultType="com.example.rael.dto.ProductAllSelectDTO">
+	<![CDATA[
+		SELECT 
+		    A.PRODUCT_CATEGORY_NAME AS PRODUCTCATEGORYNAME,
+		    B.PRODUCT_NUM AS PRODUCTNUM,
+		    C.PRODUCT_BY_NUM AS PRODUCTBYNUM,
+		    B.PRODUCT_NAME AS PRODUCTNAME,
+		    C.PRODUCT_VENDOR AS PRODUCTVENDOR,
+		    C.PRODUCT_COMPANY AS PRODUCTCOMPANY,
+		    NVL(C.PRODUCT_COLOR, '') AS PRODUCTCOLOR,
+		    C.PRODUCT_PRICE_INBOUND AS PRODUCTPRICEINBOUND,
+		    C.PRODUCT_PRICE_OUTBOUND AS PRODUCTPRICEOUTBOUND,
+		    NVL(C.PRODUCT_LENGTH, '') AS PRODUCTLENGTH,
+		    NVL(C.PRODUCT_WEIGHT, '') AS PRODUCTWEIGHT,
+		    NVL(C.PRODUCT_VOLT, '') AS PRODUCTVOLT,
+		    C.PRODUCT_APPEND_DATE AS APPENDDATE,
+		    C.PRODUCT_UPDATE_DATE AS UPDATEDATE,
+		    C.PRODUCT_DESCRIPTION AS PRODUCTDESCRIPTION
+		FROM 
+		    RAEL_PRODUCT_CATEGORY A,
+		    RAEL_PRODUCT B,
+		    RAEL_PRODUCT_DETAIL C
+		WHERE
+		    A.PRODUCT_CATEGORY_NUM = B.PRODUCT_CATEGORY_NUM AND
+		    B.PRODUCT_NUM = C.PRODUCT_NUM AND
+		    A.PRODUCT_CATEGORY_NUM = #{arg1}
+		ORDER BY 
+			B.PRODUCT_NUM, C.PRODUCT_BY_NUM
+		OFFSET #{arg0.pagination.limitStart} ROWS FETCH NEXT #{arg0.recordSize} ROW ONLY
+	]]>
+	</select>
+	<select id="SelectProductDetailROW" parameterType="hashmap" resultType="com.example.rael.dto.ProductAllSelectDTO">
+	<![CDATA[
+		SELECT 
+		    A.PRODUCT_CATEGORY_NAME AS PRODUCTCATEGORYNAME,
+		    B.PRODUCT_NUM AS PRODUCTNUM,
+		    C.PRODUCT_BY_NUM AS PRODUCTBYNUM,
+		    B.PRODUCT_NAME AS PRODUCTNAME,
+		    C.PRODUCT_VENDOR AS PRODUCTVENDOR,
+		    C.PRODUCT_COMPANY AS PRODUCTCOMPANY,
+		    NVL(C.PRODUCT_COLOR, '') AS PRODUCTCOLOR,
+		    C.PRODUCT_PRICE_INBOUND AS PRODUCTPRICEINBOUND,
+		    C.PRODUCT_PRICE_OUTBOUND AS PRODUCTPRICEOUTBOUND,
+		    NVL(C.PRODUCT_LENGTH, '') AS PRODUCTLENGTH,
+		    NVL(C.PRODUCT_WEIGHT, '') AS PRODUCTWEIGHT,
+		    NVL(C.PRODUCT_VOLT, '') AS PRODUCTVOLT,
+		    C.PRODUCT_APPEND_DATE AS APPENDDATE,
+		    C.PRODUCT_UPDATE_DATE AS UPDATEDATE,
+		    C.PRODUCT_DESCRIPTION AS PRODUCTDESCRIPTION
+		FROM 
+		    RAEL_PRODUCT_CATEGORY A,
+		    RAEL_PRODUCT B,
+		    RAEL_PRODUCT_DETAIL C
+		WHERE
+		    A.PRODUCT_CATEGORY_NUM = B.PRODUCT_CATEGORY_NUM AND
+		    B.PRODUCT_NUM = C.PRODUCT_NUM AND
+		    C.PRODUCT_NUM = #{productnum} AND
+		    C.PRODUCT_BY_NUM = #{productbynum}
+	]]>
+	</select>
+	<select id="ProductInboundPrice" parameterType="string" resultType="com.example.rael.dto.StockPriceDTO">
+	<![CDATA[
+		SELECT
+				B.STOCK_NUM,
+				A.PRODUCTNAME AS STOCKNAME
+			FROM
+				(
+					SELECT
+						B.PRODUCT_NAME|| ' (' || 
+					    DECODE(A.PRODUCT_COLOR,NULL,A.PRODUCT_COMPANY, A.PRODUCT_COMPANY||', ') ||
+					    DECODE(A.PRODUCT_LENGTH,NULL,NVL(A.PRODUCT_COLOR,''), A.PRODUCT_COLOR ||', ') ||
+					    A.PRODUCT_LENGTH||')' AS PRODUCTNAME,
+					    A.PRODUCT_NUM, A.PRODUCT_BY_NUM
+					FROM
+						RAEL_PRODUCT_DETAIL A,
+						RAEL_PRODUCT B
+					WHERE
+						A.PRODUCT_NUM = B.PRODUCT_NUM
+				) A,
+				RAEL_STOCK B
+			WHERE
+				A.PRODUCT_NUM = SUBSTR(B.STOCK_NUM,0,8) AND
+				A.PRODUCT_BY_NUM = TO_NUMBER(SUBSTR(B.STOCK_NUM, 9, 2)
+			)
+		
+	]]>
+	</select>
+
+</mapper>

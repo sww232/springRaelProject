@@ -1,0 +1,106 @@
+package com.example.rael.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.example.rael.dto.SearchDTO;
+import com.example.rael.dto.StockHistoryDTO;
+import com.example.rael.dto.StockSelectDTO;
+import com.example.rael.paging.PagingResponse;
+import com.example.rael.service.ProductService;
+import com.example.rael.service.StockService;
+
+@Controller
+@RequestMapping("/stock")
+public class StockController {
+	
+	@Autowired
+	StockService stockService;
+	
+	@Autowired
+	ProductService productService;
+	
+	@RequestMapping("/stock_select")
+	public ModelAndView Stock_Select(	@ModelAttribute("param") SearchDTO param,
+										@RequestParam(value = "categoryBox", required=false, defaultValue="defaultValue") String category) {
+		ModelAndView mv = new ModelAndView();
+		List<String> categorydata = productService.SelectCategoryNums();
+		mv.addObject("categorynums", categorydata);
+		
+		
+		if(category.equals("defaultValue")) {
+		}
+		else {
+			String[] temp_categorydatas = category.split("/", 2);
+			int temp_categorynum = Integer.parseInt(temp_categorydatas[0]);
+			
+			param.setCategorynum(temp_categorynum);
+		}
+		
+		PagingResponse<StockSelectDTO> datas = stockService.SelectStock(param);
+		mv.addObject("datas", datas);
+		mv.setViewName("stock/stock_select");
+		return mv;
+	}
+	
+	@RequestMapping("/stock_history")
+	public ModelAndView Stock_History(@ModelAttribute("param") SearchDTO searchDTO) {
+		ModelAndView mv = new ModelAndView();
+		PagingResponse<StockHistoryDTO> datas = stockService.SelectStockHistory(searchDTO);
+		mv.addObject("datas", datas);
+		mv.setViewName("stock/stock_history");
+		return mv;
+	}
+	@RequestMapping("/stock_history_cancel")
+	public ModelAndView Stock_History_Cancel(@ModelAttribute("param") SearchDTO searchDTO) {
+		ModelAndView mv = new ModelAndView();
+		PagingResponse<StockHistoryDTO> datas = stockService.SelectStockHistory(searchDTO);
+		mv.addObject("datas", datas);
+		mv.setViewName("stock/stock_history_cancel");
+		return mv;
+	}
+	@RequestMapping(value="/stock_history/CANCEL/{id}", method = RequestMethod.POST)
+	public ModelAndView Stock_CANCEL(	@PathVariable("id") String seq,
+										RedirectAttributes rs) {
+		ModelAndView mv = new ModelAndView();
+		
+		int result = stockService.StockHistoryCancel(sequence);
+		
+		rs.addFlashAttribute("insertresult", result == 1 ? 1 : 0);
+		mv.setViewName("redirect:/stock_main");
+		return mv;
+	}
+	
+	@RequestMapping("/stock_in")
+	public ModelAndView Stock_In() {
+		ModelAndView mv = new ModelAndView();
+		return mv;
+	}
+	
+	@RequestMapping(value="/stock_in/INSERT", method = RequestMethod.POST)
+	public ModelAndView Stock_In_INSERT() {
+		ModelAndView mv = new ModelAndView();
+		return mv;
+	}
+	@RequestMapping("/stock_out")
+	public ModelAndView Stock_Out() {
+		ModelAndView mv = new ModelAndView();
+		return mv;
+	}
+	@RequestMapping(value="/stock_out/INSERT", method = RequestMethod.POST)
+	public ModelAndView Stock_Out_INSERT() {
+		ModelAndView mv = new ModelAndView();
+		return mv;
+	}
+	
+	
+}

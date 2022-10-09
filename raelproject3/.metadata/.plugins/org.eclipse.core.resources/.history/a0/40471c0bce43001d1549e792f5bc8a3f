@@ -1,0 +1,16 @@
+package com.example.rael.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.example.rael.dto.SearchDTO;
+import com.example.rael.dto.StockSelectDTO;
+
+@Mapper
+public interface StockMapper {
+	
+	int StockCount();
+	int StockCountCategory(int categorynum);
+	List<StockSelectDTO> SelectStock(SearchDTO searchDTO);
+}
