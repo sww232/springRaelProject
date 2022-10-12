@@ -1,0 +1,23 @@
+package com.example.rael;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration({"RootConfig","SecuritConfig"})
+public class TestEncode {
+	
+	@Autowired
+	private PasswordEncoder encoder;
+	
+	@Test
+	public void TestEncode() {
+		String a = encoder.encode("haul2");
+		System.out.print("============================");
+		System.out.print(a);
+		System.out.print("============================");
+	}
+}

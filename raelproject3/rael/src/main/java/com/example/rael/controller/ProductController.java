@@ -49,6 +49,11 @@ public class ProductController {
 		}
 		else  mv.setViewName("product/category_insert");
 		
+		SearchDTO searchDTO = new SearchDTO();
+		
+		mv.addObject("page",searchDTO.getPage());
+		mv.addObject("pageSize",searchDTO.getPageSize());
+		mv.addObject("recordSize",searchDTO.getRecordSize());
 		
 		List<String> categorynums = productService.SelectCategoryNums();
 		mv.addObject("categorynums", categorynums);
@@ -56,10 +61,10 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value = "/category_insert/INSERT", method = RequestMethod.POST)
-	public String Category_Insert_Sumit( 		@RequestParam("productcategory num") int num, 
-												@RequestParam("productcategory name") String name,
-												RedirectAttributes re) {
-		
+	public ModelAndView Category_Insert_Sumit( 		@RequestParam("productcategory num") int num, 
+													@RequestParam("productcategory name") String name,
+													RedirectAttributes re) {
+		ModelAndView mv = new ModelAndView();
 		ProductCategoryDTO insertdatas = new ProductCategoryDTO();
 		insertdatas.setPRODUCTCATEGORYNUM(num);
 		insertdatas.setPRODUCTCATEGORYNAME(name);
@@ -70,13 +75,22 @@ public class ProductController {
 			productCategoryService.CreateCategorySEQ(map);
 		}
 		re.addFlashAttribute("insertresult", result >  0 ? 1 : 0);
-		return "redirect:/product/category_insert";
+		SearchDTO searchDTO = new SearchDTO();
+		
+		re.addAttribute("page",searchDTO.getPage());
+		re.addAttribute("pageSize",searchDTO.getPageSize());
+		re.addAttribute("recordSize",searchDTO.getRecordSize());
+		
+		mv.setViewName("redirect:/product/category_insert");
+		
+		return mv;
 	}
 	
 	@RequestMapping("/category_update")
-	public String Category_Update(	@ModelAttribute("param") SearchDTO param, 
-									Model model,
-									@RequestParam(value="categoryBox", required=false, defaultValue="defaultValue") String category) {
+	public ModelAndView Category_Update(	@ModelAttribute("param") SearchDTO param, 
+											@RequestParam(value="categoryBox", required=false, defaultValue="defaultValue") String category) {
+		
+		ModelAndView mv = new ModelAndView();
 		if(category.equals("defaultValue")) {
 		}
 		else {
@@ -90,15 +104,21 @@ public class ProductController {
 		List<String> CategoryHead = productCategoryService.SelectHeadCategory();
 		List<String> categorynums = productService.SelectCategoryNums();
 		int count = productCategoryService.Count(param);
+		SearchDTO searchDTO = new SearchDTO(); 
 		
-		model.addAttribute("categorynums", categorynums);
-		model.addAttribute("categorynums2", CategoryHead);
-		model.addAttribute("datas", CategoryDatas);
-		model.addAttribute("categoryBox", category);
-		model.addAttribute("allcount", count);
-		model.addAttribute("shownumber", param.getPage() * param.getRecordSize());
+		mv.addObject("page",searchDTO.getPage());
+		mv.addObject("pageSize",searchDTO.getPageSize());
+		mv.addObject("recordSize",searchDTO.getRecordSize());
+		mv.addObject("categorynums", categorynums);
+		mv.addObject("categorynums2", CategoryHead);
+		mv.addObject("datas", CategoryDatas);
+		mv.addObject("categoryBox", category);
+		mv.addObject("allcount", count);
+		mv.addObject("shownumber", param.getPage() * param.getRecordSize());
 		
-		return "product/category_update";
+		mv.setViewName("product/category_update");
+		
+		return mv;
 	}
 	
 	@RequestMapping(value = "/category_update/UPDATE", method = RequestMethod.POST)
@@ -120,13 +140,19 @@ public class ProductController {
 			}
 		}
 		re.addFlashAttribute("updateresult", result > 0 ? 1 : 0);
-		return "redirect:/product/category_update";
+		SearchDTO searchDTO = new SearchDTO();
+		
+		re.addAttribute("page",searchDTO.getPage());
+		re.addAttribute("pageSize",searchDTO.getPageSize());
+		re.addAttribute("recordSize",searchDTO.getRecordSize());
+		return "redirect:/product/category_select";
 	}
 
 	@RequestMapping("/category_select")
-	public String Category_Select(	@ModelAttribute("param") SearchDTO param, 
-									Model model,
-									@RequestParam(value="categoryBox", required=false, defaultValue="defaultValue") String category) {
+	public ModelAndView Category_Select(	@ModelAttribute("param") SearchDTO param, 
+											@RequestParam(value="categoryBox", required=false, defaultValue="defaultValue") String category) {
+		ModelAndView mv = new ModelAndView();
+		
 		if(category.equals("defaultValue")) {
 		}
 		else {
@@ -141,24 +167,29 @@ public class ProductController {
 		List<String> categorynums = productService.SelectCategoryNums();
 		int count = productCategoryService.Count(param);
 		
-		model.addAttribute("categorynums", categorynums);
-		model.addAttribute("categoryhead", CategoryHead);
-		model.addAttribute("datas", CategoryDatas);
-		model.addAttribute("categoryBox", category);
-		model.addAttribute("allcount", count);
-		model.addAttribute("shownumber", param.getPage() * param.getRecordSize());
+		SearchDTO searchDTO = new SearchDTO(); 
 		
+		mv.addObject("page",searchDTO.getPage());
+		mv.addObject("pageSize",searchDTO.getPageSize());
+		mv.addObject("recordSize",searchDTO.getRecordSize());
+		mv.addObject("categorynums", categorynums);
+		mv.addObject("categoryhead", CategoryHead);
+		mv.addObject("datas", CategoryDatas);
+		mv.addObject("categoryBox", category);
+		mv.addObject("allcount", count);
+		mv.addObject("shownumber", param.getPage() * param.getRecordSize());
 		
-		return "product/category_select";
+		mv.setViewName("product/category_select");
+		
+		return mv;
 	}
 	
 	// PRODUCT LINE --------------------------------------------------------------------------
 	
 	@RequestMapping("/all_select")
-	public String Product_All_Select(	@ModelAttribute("param") SearchDTO param, 
-										Model model,
-										@RequestParam(value = "categoryBox", required=false, defaultValue="defaultValue") String category) {
-		
+	public ModelAndView Product_All_Select(	@ModelAttribute("param") SearchDTO param, 
+											@RequestParam(value = "categoryBox", required=false, defaultValue="defaultValue") String category) {
+		ModelAndView mv = new ModelAndView();
 		if(category.equals("defaultValue")) {
 		}
 		else {
@@ -171,13 +202,21 @@ public class ProductController {
 		PagingResponse<ProductAllSelectDTO> AllDatas = productService.SelectAllProduct(param);
 		int allcount = productService.AllCount(param);
 		List<String> categorynums = productService.SelectCategoryNums();
-		model.addAttribute("categoryBox", category);
-		model.addAttribute("datas", AllDatas);
-		model.addAttribute("categorynums", categorynums);
-		model.addAttribute("allcount", allcount);
-		model.addAttribute("shownumber", param.getPage() * param.getRecordSize());
 		
-		return "product/all_select";
+		SearchDTO searchDTO = new SearchDTO(); 
+		
+		mv.addObject("page",searchDTO.getPage());
+		mv.addObject("pageSize",searchDTO.getPageSize());
+		mv.addObject("recordSize",searchDTO.getRecordSize());
+		
+		mv.addObject("categoryBox", category);
+		mv.addObject("datas", AllDatas);
+		mv.addObject("categorynums", categorynums);
+		mv.addObject("allcount", allcount);
+		mv.addObject("shownumber", param.getPage() * param.getRecordSize());
+		mv.setViewName("product/all_select");
+		
+		return mv;
 	}
 	
 	@RequestMapping("/product_insert")
@@ -185,7 +224,7 @@ public class ProductController {
 		ModelAndView mv = new ModelAndView();
 		
 		if("defaultValue".equals(selected)) {
-			mv.setViewName("redirect:/main");
+			mv.setViewName("redirect:/");
 		}
 		else {
 			HashMap<String, Integer> categorydata = new HashMap<String, Integer>();
@@ -203,6 +242,12 @@ public class ProductController {
 			productdata.put("productnum", ProductNum);
 			
 			int DetailLastByNum = productService.SelectProductDetailLastByNumber(productdata);
+			
+			SearchDTO searchDTO = new SearchDTO();
+			
+			mv.addObject("page",searchDTO.getPage());
+			mv.addObject("pageSize",searchDTO.getPageSize());
+			mv.addObject("recordSize",searchDTO.getRecordSize());
 			mv.addObject("categorynums", categorynums);
 			mv.addObject("productnum", ProductNum);
 			mv.addObject("detaillastbynum", DetailLastByNum);
@@ -216,21 +261,22 @@ public class ProductController {
 	}
 	
 	@RequestMapping("/product_insert/INSERT")
-	public String Product_Insert_Submit(RedirectAttributes re,
-										@RequestParam("product category num") int categorynum,
-										@RequestParam("product num") String productnum,
-										@RequestParam("product detail num") int productbynum,
-										@RequestParam("product name") String productname,
-										@RequestParam("product inbound price") int productpriceinbound,
-										@RequestParam("product outbound price") int productpriceoutbound,
-										@RequestParam("product vendor") String productvendor,
-										@RequestParam("product company") String productcompany,
-										@RequestParam("product color") String productcolor,
-										@RequestParam("product length") String productlength,
-										@RequestParam("product weight") String productweight,
-										@RequestParam("product battery") String productbattery,
-										@RequestParam("product description") String productdescription) {
-		
+	public ModelAndView Product_Insert_Submit(	RedirectAttributes re,
+												@RequestParam("categoryBox") int selected,
+												@RequestParam("product category num") int categorynum,
+												@RequestParam("product num") String productnum,
+												@RequestParam("product detail num") int productbynum,
+												@RequestParam("product name") String productname,
+												@RequestParam("product inbound price") int productpriceinbound,
+												@RequestParam("product outbound price") int productpriceoutbound,
+												@RequestParam("product vendor") String productvendor,
+												@RequestParam("product company") String productcompany,
+												@RequestParam("product color") String productcolor,
+												@RequestParam("product length") String productlength,
+												@RequestParam("product weight") String productweight,
+												@RequestParam("product battery") String productbattery,
+												@RequestParam("product description") String productdescription) {
+		ModelAndView mv = new ModelAndView();
 		ProductDTO productDTO = new ProductDTO();
 		ProductDetailDTO productDetailDTO = new ProductDetailDTO();
 		
@@ -251,8 +297,15 @@ public class ProductController {
 		productService.InsertProduct(productDTO);
 		int result = productService.InsertProductDetail(productnum, productbynum, productDetailDTO);
 		re.addFlashAttribute("insertresult", result >  0 ? 1 : 0);
+		SearchDTO searchDTO = new SearchDTO();
 		
-		return "redirect:/main";
+		re.addAttribute("page",searchDTO.getPage());
+		re.addAttribute("pageSize",searchDTO.getPageSize());
+		re.addAttribute("recordSize",searchDTO.getRecordSize());
+		
+		mv.setViewName("redirect:/product/product_insert");
+		
+		return mv;
 	}
 	
 	@RequestMapping("/product_insert_detail")
@@ -261,7 +314,7 @@ public class ProductController {
 		ModelAndView mv = new ModelAndView();
 		
 		if("defaultValue".equals(selected)) {
-			mv.setViewName("redirect:/main");
+			mv.setViewName("redirect:/");
 		}
 		else {
 			String[] temp_categorydatas = selected.split("/", 2);
@@ -293,6 +346,13 @@ public class ProductController {
 				productdata.clear();
 			}
 			
+			SearchDTO searchDTO = new SearchDTO();
+			
+			mv.addObject("page",searchDTO.getPage());
+			mv.addObject("pageSize",searchDTO.getPageSize());
+			mv.addObject("recordSize",searchDTO.getRecordSize());
+			
+			mv.addObject("categoryBox", selected);
 			mv.addObject("categorynums", categorynums);
 			mv.addObject("productdatas", productDatas);
 			mv.setViewName("product/product_insert_detail");
@@ -304,6 +364,7 @@ public class ProductController {
 	
 	@RequestMapping("/product_insert_detail/INSERT")
 	public ModelAndView Product_Detail_Insert_Submit(	RedirectAttributes re,
+														@RequestParam("categoryBox") String categoryBox,
 														@RequestParam("productBox") String selected,
 														@RequestParam("product inbound price") int productpriceinbound,
 														@RequestParam("product outbound price") int productpriceoutbound,
@@ -320,6 +381,7 @@ public class ProductController {
 			
 			
 			re.addFlashAttribute("insertresult", 0);
+			re.addAttribute("categoryBox2", categoryBox);
 			mv.setViewName("redirect:/product/product_insert_detail");
 			
 			return mv;
@@ -346,7 +408,13 @@ public class ProductController {
 			
 			int result = productService.InsertProductDetail(productNum, productByNum, productDetailDTO);
 			re.addFlashAttribute("insertresult", result);
-			mv.setViewName("redirect:/");
+			mv.setViewName("redirect:/product/product_insert_detail");
+			
+			SearchDTO searchDTO = new SearchDTO();
+			
+			re.addAttribute("page",searchDTO.getPage());
+			re.addAttribute("pageSize",searchDTO.getPageSize());
+			re.addAttribute("recordSize",searchDTO.getRecordSize());
 			
 			return mv;
 		}
@@ -361,7 +429,7 @@ public class ProductController {
 		
 		ModelAndView mv = new ModelAndView();
 		if("defaultValue".equals(selected)) {
-			mv.setViewName("redirect:/main");
+			mv.setViewName("redirect:/");
 		}
 		else {
 			
@@ -371,6 +439,10 @@ public class ProductController {
 			List<String> categorynums = productService.SelectCategoryNums();
 			
 			int allcount = productService.ProductCount(temp_categorynum);
+
+			mv.addObject("page",searchDTO.getPage());
+			mv.addObject("pageSize",searchDTO.getPageSize());
+			mv.addObject("recordSize",searchDTO.getRecordSize());
 			
 			mv.addObject("allcount", allcount);
 			mv.addObject("shownumber", searchDTO.getPage() * searchDTO.getRecordSize());
@@ -382,11 +454,20 @@ public class ProductController {
 		return mv;
 	}
 	@RequestMapping("/product_update/{num}")
-	public ModelAndView Product_Update_(@PathVariable("num") String num) {
+	public ModelAndView Product_Update_(	@PathVariable("num") String num,
+											@RequestParam("categoryBox") String selected) {
 		ModelAndView mv = new ModelAndView();
 		ProductDTO data = productService.SelectProductROW(num);
 		List<String> categorynums = productService.SelectCategoryNums();
 		
+		SearchDTO searchDTO = new SearchDTO();
+		
+		mv.addObject("page",searchDTO.getPage());
+		mv.addObject("pageSize",searchDTO.getPageSize());
+		mv.addObject("recordSize",searchDTO.getRecordSize());
+		
+		mv.addObject("productnum", num);
+		mv.addObject("categoryBox",selected);
 		mv.addObject("categorynums", categorynums);
 		mv.addObject("data", data);
 		mv.setViewName("product/product_update_modifypage");
@@ -395,7 +476,7 @@ public class ProductController {
 	}
 	@RequestMapping("/product_update_detail")
 	public ModelAndView Product_Update_Detail(	@RequestParam("categoryBox") String selected,	
-												@ModelAttribute("param") SearchDTO searchDTO,
+												@ModelAttribute("param") SearchDTO param,
 												RedirectAttributes re) {
 		ModelAndView mv = new ModelAndView();
 		if("defaultValue".equals(selected)) {
@@ -404,13 +485,21 @@ public class ProductController {
 		else {
 			String[] temp_categorydatas = selected.split("/", 2);
 			int temp_categorynum = Integer.parseInt(temp_categorydatas[0]);
-			PagingResponse<ProductAllSelectDTO> productDatas = productService.SelectProductDetail(searchDTO, temp_categorynum);
+			PagingResponse<ProductAllSelectDTO> productDatas = productService.SelectProductDetail(param, temp_categorynum);
 			List<String> categorynums = productService.SelectCategoryNums();
 			
+			int allcount = productService.ProductDetailCount(temp_categorynum);
+			SearchDTO searchDTO = new SearchDTO();
+			
+			mv.addObject("page",searchDTO.getPage());
+			mv.addObject("pageSize",searchDTO.getPageSize());
+			mv.addObject("recordSize",searchDTO.getRecordSize());
 			
 			mv.addObject("datas", productDatas);
 			mv.addObject("categoryBox",selected);
 			mv.addObject("categorynums", categorynums);
+			mv.addObject("allcount", allcount);
+			mv.addObject("shownumber", param.getPage() * param.getRecordSize());
 			mv.setViewName("/product/product_update_detail");
 		}
 
@@ -429,6 +518,12 @@ public class ProductController {
 		List<String> categorynums = productService.SelectCategoryNums();
 		
 		ProductAllSelectDTO data = productService.SelectProductDetailROW(productdata);
+		SearchDTO searchDTO = new SearchDTO();
+		
+		mv.addObject("page",searchDTO.getPage());
+		mv.addObject("pageSize",searchDTO.getPageSize());
+		mv.addObject("recordSize",searchDTO.getRecordSize());
+		
 		mv.addObject("data", data);
 		mv.addObject("categoryBox", selected);
 		mv.addObject("categorynums", categorynums);
@@ -446,8 +541,14 @@ public class ProductController {
 		
 		
 		int result = productService.UpdateProduct(productNum, productName);
-		mv.addObject("categoryBox", selected);
+		SearchDTO searchDTO = new SearchDTO();
+		
+		re.addAttribute("page",searchDTO.getPage());
+		re.addAttribute("pageSize",searchDTO.getPageSize());
+		re.addAttribute("recordSize",searchDTO.getRecordSize());
+		
 		re.addFlashAttribute("updateresult", result == 1 ? 1 : 0);
+		re.addAttribute("categoryBox3", selected);
 		mv.setViewName("redirect:/product/product_update");
 		return mv;
 	}
@@ -481,8 +582,13 @@ public class ProductController {
 		int result = productService.UpdateProductDetail(productNum, productByNum, productdata);
 		
 		re.addFlashAttribute("updateresult", result == 1 ? 1 : 0);
-		mv.addObject("categoryBox", selected);
+		re.addAttribute("categoryBox", selected);
 		mv.setViewName("redirect:/product/product_update_detail");
+		SearchDTO searchDTO = new SearchDTO();
+		
+		re.addAttribute("page",searchDTO.getPage());
+		re.addAttribute("pageSize",searchDTO.getPageSize());
+		re.addAttribute("recordSize",searchDTO.getRecordSize());
 		
 		return mv;
 	}

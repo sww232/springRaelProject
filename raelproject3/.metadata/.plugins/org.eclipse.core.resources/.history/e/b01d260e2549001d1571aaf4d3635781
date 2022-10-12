@@ -1,0 +1,19 @@
+package com.example.rael.dto;
+
+import java.util.Collection;
+
+import org.springframework.security.core.GrantedAuthority;
+
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+@Data
+@Getter
+@Setter
+public class UserDTO {
+	String USERID;
+	String USERPW;
+	String USERAUTH;
+	String USERNAME;
+}

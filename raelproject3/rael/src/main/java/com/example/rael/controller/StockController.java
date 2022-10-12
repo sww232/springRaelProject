@@ -48,22 +48,43 @@ public class StockController {
 		mv.addObject("categoryBox", category);
 		PagingResponse<StockSelectDTO> datas = stockService.SelectStock(param);
 		mv.addObject("datas", datas);
+		SearchDTO searchDTO = new SearchDTO(); 
+		
+		mv.addObject("page",searchDTO.getPage());
+		mv.addObject("pageSize",searchDTO.getPageSize());
+		mv.addObject("recordSize",searchDTO.getRecordSize());
 		mv.setViewName("stock/stock_select");
 		return mv;
 	}
 	
 	@RequestMapping("/stock_history")
-	public ModelAndView Stock_History(@ModelAttribute("param") SearchDTO searchDTO) {
+	public ModelAndView Stock_History(@ModelAttribute("param") SearchDTO param) {
 		ModelAndView mv = new ModelAndView();
-		PagingResponse<StockHistoryDTO> datas = stockService.SelectStockHistory(searchDTO);
+		PagingResponse<StockHistoryDTO> datas = stockService.SelectStockHistory(param);
+		List<String> categorynums = productService.SelectCategoryNums();
+		
+		SearchDTO searchDTO = new SearchDTO(); 
+		
+		mv.addObject("page",searchDTO.getPage());
+		mv.addObject("pageSize",searchDTO.getPageSize());
+		mv.addObject("recordSize",searchDTO.getRecordSize());
+		mv.addObject("categorynums", categorynums);
 		mv.addObject("datas", datas);
 		mv.setViewName("stock/stock_history");
 		return mv;
 	}
 	@RequestMapping("/stock_history_cancel")
-	public ModelAndView Stock_History_Cancel(@ModelAttribute("param") SearchDTO searchDTO) {
+	public ModelAndView Stock_History_Cancel(@ModelAttribute("param") SearchDTO param) {
 		ModelAndView mv = new ModelAndView();
-		PagingResponse<StockHistoryDTO> datas = stockService.SelectStockHistory(searchDTO);
+		PagingResponse<StockHistoryDTO> datas = stockService.SelectStockHistory(param);
+		List<String> categorynums = productService.SelectCategoryNums();
+		
+		SearchDTO searchDTO = new SearchDTO(); 
+		
+		mv.addObject("page",searchDTO.getPage());
+		mv.addObject("pageSize",searchDTO.getPageSize());
+		mv.addObject("recordSize",searchDTO.getRecordSize());
+		mv.addObject("categorynums", categorynums);
 		mv.addObject("datas", datas);
 		mv.setViewName("stock/stock_history_cancel");
 		return mv;
@@ -76,7 +97,7 @@ public class StockController {
 		int result = stockService.StockHistoryCancel(seq);
 		
 		rs.addFlashAttribute("insertresult", result == 1 ? 1 : 0);
-		mv.setViewName("redirect:/main");
+		mv.setViewName("redirect:/stock/stock_history");
 		return mv;
 	}
 	
@@ -87,8 +108,13 @@ public class StockController {
 		ModelAndView mv = new ModelAndView();
 		
 		int price = productService.ProductStockPrice(stockstate, stocknum);
+		List<String> categorynums = productService.SelectCategoryNums();
+		SearchDTO searchDTO = new SearchDTO();
 		
-		
+		mv.addObject("page",searchDTO.getPage());
+		mv.addObject("pageSize",searchDTO.getPageSize());
+		mv.addObject("recordSize",searchDTO.getRecordSize());
+		mv.addObject("categorynums", categorynums);
 		mv.addObject("stocknum", stocknum);
 		mv.addObject("stockname", stockname);
 		mv.addObject("stockprice", price);
@@ -102,7 +128,7 @@ public class StockController {
 											@RequestParam("stock num") String stocknum,
 											@RequestParam("stock quantity") int stockquantity,
 											@RequestParam("stock price") int stockprice,
-											RedirectAttributes rs) {
+											RedirectAttributes re) {
 		ModelAndView mv = new ModelAndView();
 		
 		StockHistoryDTO data = new StockHistoryDTO();
@@ -114,9 +140,14 @@ public class StockController {
 		data.setSTOCKPRICESUM(stockprice*stockquantity);
 		
 		int result = stockService.StockHistoryInsert(data);
-		rs.addFlashAttribute("insertresult", result == 1 ? 1 : 0);
+		re.addFlashAttribute("insertresult", result == 1 ? 1 : 0);
+		SearchDTO searchDTO = new SearchDTO();
 		
-		mv.setViewName("redirect:/main");
+		re.addAttribute("page",searchDTO.getPage());
+		re.addAttribute("pageSize",searchDTO.getPageSize());
+		re.addAttribute("recordSize",searchDTO.getRecordSize());
+		
+		mv.setViewName("redirect:/stock/stock_select");
 		return mv;
 	}
 	@RequestMapping("/stock_out/{stockstate}/{stocknum}/{stockname}")
@@ -126,8 +157,13 @@ public class StockController {
 		ModelAndView mv = new ModelAndView();
 		
 		int price = productService.ProductStockPrice(stockstate, stocknum);
+		List<String> categorynums = productService.SelectCategoryNums();
+		SearchDTO searchDTO = new SearchDTO(); 
 		
-		
+		mv.addObject("page",searchDTO.getPage());
+		mv.addObject("pageSize",searchDTO.getPageSize());
+		mv.addObject("recordSize",searchDTO.getRecordSize());
+		mv.addObject("categorynums", categorynums);
 		mv.addObject("stocknum", stocknum);
 		mv.addObject("stockname", stockname);
 		mv.addObject("stockprice", price);
@@ -140,7 +176,7 @@ public class StockController {
 											@RequestParam("stock num") String stocknum,
 											@RequestParam("stock quantity") int stockquantity,
 											@RequestParam("stock price") int stockprice,
-											RedirectAttributes rs) {
+											RedirectAttributes re) {
 		ModelAndView mv = new ModelAndView();
 		StockHistoryDTO data = new StockHistoryDTO();
 		
@@ -151,9 +187,14 @@ public class StockController {
 		data.setSTOCKPRICESUM(stockprice*stockquantity);
 		
 		int result = stockService.StockHistoryInsert(data);
-		rs.addFlashAttribute("insertresult", result == 1 ? 1 : 0);
+		re.addFlashAttribute("insertresult", result == 1 ? 1 : 0);
+		SearchDTO searchDTO = new SearchDTO();
 		
-		mv.setViewName("redirect:/main");
+		re.addAttribute("page",searchDTO.getPage());
+		re.addAttribute("pageSize",searchDTO.getPageSize());
+		re.addAttribute("recordSize",searchDTO.getRecordSize());
+		
+		mv.setViewName("redirect:/stock/stock_select");
 		return mv;
 	}
 	

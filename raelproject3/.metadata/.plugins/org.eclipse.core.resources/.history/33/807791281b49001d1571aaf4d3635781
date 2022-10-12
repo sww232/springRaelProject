@@ -1,0 +1,8 @@
+package com.example.rael.dto;
+
+public class UserDTO {
+	String USERID;
+	String USERPW;
+	String USERAUTH;
+	String USERNAME;
+}

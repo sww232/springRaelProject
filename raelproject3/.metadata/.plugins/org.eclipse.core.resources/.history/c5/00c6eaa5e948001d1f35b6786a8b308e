@@ -1,0 +1,5 @@
+package com.example.rael.mapper;
+
+public interface UserMapper {
+
+}

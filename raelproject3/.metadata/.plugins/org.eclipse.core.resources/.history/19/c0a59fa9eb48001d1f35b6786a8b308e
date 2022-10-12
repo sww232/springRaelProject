@@ -1,0 +1,7 @@
+package com.example.rael.service;
+
+import com.example.rael.dto.UserDTO;
+
+public interface UserService {
+	public String FindPW(String id);
+}

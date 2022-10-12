@@ -1,0 +1,5 @@
+package com.example.rael.dto;
+
+public class UserDTO {
+
+}

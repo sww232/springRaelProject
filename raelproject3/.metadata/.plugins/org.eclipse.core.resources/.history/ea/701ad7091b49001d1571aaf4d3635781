@@ -1,0 +1,7 @@
+package com.example.rael.mapper;
+
+import com.example.rael.dto.UserDTO;
+
+public class UserMapper {
+	public UserDTO getUserInfo(String userid);
+}

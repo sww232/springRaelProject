@@ -1,0 +1,5 @@
+package com.example.rael.service;
+
+public interface UserService {
+	public User Login(String id);
+}

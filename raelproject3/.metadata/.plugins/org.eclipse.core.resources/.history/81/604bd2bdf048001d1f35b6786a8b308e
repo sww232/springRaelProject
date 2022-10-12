@@ -1,0 +1,15 @@
+package com.example.rael.service;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.example.rael.mapper.UserMapper;
+
+public class UserSerivceImpl implements UserService{
+	private UserMapper userMapper;
+    private PasswordEncoder passwordEncoder;
+    
+    public String Login(String ID, String PW) {
+    	return userMapper.Login(ID, PW);
+    }
+    
+}

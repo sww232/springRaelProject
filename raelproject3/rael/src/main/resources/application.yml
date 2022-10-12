@@ -11,6 +11,11 @@ spring:
   sql:
     init:
       encoding: UTF-8
+  security:
+    user:
+      name: rael
+      password: haul2
+      roles: ADMIN
   
     
 server:
@@ -31,6 +36,7 @@ logging:
     org:
       springframework: TRACE
     com: TRACE
+    
     
     
 mybatis:
