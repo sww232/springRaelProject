@@ -34,8 +34,8 @@ server:
 logging:
   level:
     org:
-      springframework: TRACE
-    com: TRACE
+      springframework: DEBUG
+    com: DEBUG
     
     
     

@@ -20,6 +20,9 @@ repositories {
 	mavenCentral()
 }
 
+bootWar.enabled = false
+war.enabled = true
+
 dependencies {
 	implementation 'com.oracle.ojdbc:orai18n:19.3.0.0'
 	

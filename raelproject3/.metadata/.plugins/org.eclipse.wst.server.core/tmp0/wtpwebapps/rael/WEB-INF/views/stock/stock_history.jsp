@@ -29,23 +29,15 @@
 <script src="/js/sb-admin-2.min.js"></script>
 
 <!-- Page level plugins -->
-<script src="/vendor/datatables/jquery.dataTables.min.js"></script>
 <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
 <!-- Page level custom scripts -->
 <script src="/js/demo/datatables-demo.js"></script>
 
-<script type="text/javascript">
-	// 팝업오픈하여 폼데이터 Post 전송
-	function popup(frm) {
-		if (confirm("정말 재고를 취소할까요?")) {
-			return true;
-		} else
-			return;
 
-	}
-</script>
 </head>
+
+
 <body id="page-top">
 	<form>
 		<div class="modal fade" id="moaModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -163,7 +155,7 @@
 				<div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
 					<div class="bg-white py-2 collapse-inner rounded">
 						<h6 class="collapse-header">상품 탭</h6>
-						<a class="collapse-item" href="/product/all_select?page=${page}&recordSize=${recordSize}&pageSize=${pageSize}">상품 조회</a> <a class="collapse-item" href="#" data-toggle="modal" data-target="#moaModal1"> <i class="fas fa-arrow-right"></i>상품 등록
+						<a class="collapse-item" href="/product/all_select?page=${page}&recordSize=10&pageSize=10">상품 조회</a> <a class="collapse-item" href="#" data-toggle="modal" data-target="#moaModal1"> <i class="fas fa-arrow-right"></i>상품 등록
 						</a> <a class="collapse-item" href="#" data-toggle="modal" data-target="#moaModal2"> <i class="fas fa-arrow-right"></i>상품 추가 등록
 						</a> <a class="collapse-item" href="#" data-toggle="modal" data-target="#moaModal3"> <i class="fas fa-arrow-right"></i>상품명/상세정보 수정
 						</a>
@@ -185,7 +177,7 @@
 						<a class="collapse-item" href="/stock/stock_select?page=${page}&recordSize=${recordSize}&pageSize=${pageSize}">재고 조회 및 입/출고</a>
 						<div class="collapse-divider"></div>
 						<h6 class="collapse-header">재고 입/출고</h6>
-						<a class="collapse-item" href="/stock/stock_history?page=${page}&recordSize=${recordSize}&pageSize=${pageSize}">내역</a> <a class="collapse-item" href="/stock/stock_history_cancel?page=${page}&recordSize=${recordSize}&pageSize=${pageSize}">취소</a>
+						<a class="collapse-item" href="/stock/stock_history?page=${page}&recordSize=${recordSize}&pageSize=${pageSize}">내역</a> <a class="collapse-item" href="/stock/stock_history_cancel?page=${page}&recordSize=10&pageSize=10">취소</a>
 					</div>
 				</div></li>
 
@@ -218,7 +210,7 @@
 					</form>
 
 					<!-- Topbar Search -->
-					<form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" id="searchForm" autocomplete="off" action="/stock/stock_history?page=${page}&recordSize=${recordSize}&pageSize=${pageSize}">
+					<form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" id="searchForm" autocomplete="off" action="/product/all_select?page=${page}&recordSize=10&pageSize=10">
 
 						<div class="input-group">
 							<select id="searchType" name="searchType" class="form-control">
@@ -267,6 +259,7 @@
 							</div></li>
 					</ul>
 				</nav>
+				<!-- End of Topbar -->
 				<div class="container-fluid">
 
 					<!-- Page Heading -->
@@ -292,86 +285,95 @@
 									</div>
 									<div class="row">
 										<div class="col-sm-12">
-											<form name="formData" method="post" onsubmit="javascript:popup(this)">
-												<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-													<thead>
+											<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+												<thead>
+													<tr>
+														<td>IN/OUT NUM</td>
+														<td>Stock No</td>
+														<td>Stock Name</td>
+														<td>IN/OUT Quantity</td>
+														<td>IN/OUT State</td>
+														<td>IN/OUT Price</td>
+														<td>TOTAL PRICE</td>
+														<td>Registered Date</td>
+													</tr>
+												</thead>
+												<tfoot>
+													<tr>
+														<td>IN/OUT NUM</td>
+														<td>Stock No</td>
+														<td>Stock Name</td>
+														<td>IN/OUT Quantity</td>
+														<td>IN/OUT State</td>
+														<td>IN/OUT Price</td>
+														<td>TOTAL PRICE</td>
+														<td>Registered Date</td>
+													</tr>
+												</tfoot>
+												<tbody>
+													<c:forEach items="${datas.list}" var="data">
 														<tr>
-															<td>IN/OUT NUM</td>
-															<td>Stock No</td>
-															<td>Stock Name</td>
-															<td>IN/OUT Quantity</td>
-															<td>IN/OUT State</td>
-															<td>IN/OUT Price</td>
-															<td>TOTAL PRICE</td>
-															<td>Registered Date</td>
-														</tr>
-													</thead>
-													<tfoot>
+															<td>${data.STOCKSEQUENCE}</td>
+															<td>${data.STOCKNUM}</td>
+															<td>${data.STOCKNAME}</td>
+															<td>${data.STOCKQUANTITY}</td>
+															<c:choose>
+																<c:when test="${data.STOCKSTATE eq 'NA'}">
+																	<td bgcolor="red">${data.STOCKSTATE}</td>
+																</c:when>
+																<c:otherwise>
+																	<td>${data.STOCKSTATE}</td>
+																</c:otherwise>
+															</c:choose>
+															<td>${data.STOCKPRICE}</td>
+															<td>${data.STOCKPRICESUM}</td>
+															<td>${data.STOCKAPPENDDATE}</td>
 														<tr>
-															<td>IN/OUT NUM</td>
-															<td>Stock No</td>
-															<td>Stock Name</td>
-															<td>IN/OUT Quantity</td>
-															<td>IN/OUT State</td>
-															<td>IN/OUT Price</td>
-															<td>TOTAL PRICE</td>
-															<td>Registered Date</td>
-														</tr>
-													</tfoot>
-													<tbody>
-														<c:forEach items="${datas.list}" var="data">
-															<tr>
-																<td>${data.STOCKSEQUENCE}</td>
-																<td>${data.STOCKNUM}</td>
-																<td>${data.STOCKNAME}</td>
-																<td>${data.STOCKQUANTITY}</td>
-																<c:choose>
-																	<c:when test="${data.STOCKSTATE eq 'NA'}">
-																		<td bgcolor="red">${data.STOCKSTATE}</td>
-																	</c:when>
-																	<c:otherwise>
-																		<td>${data.STOCKSTATE}</td>
-																	</c:otherwise>
-																</c:choose>
-																<td>${data.STOCKPRICE}</td>
-																<td>${data.STOCKPRICESUM}</td>
-																<td>${data.STOCKAPPENDDATE}</td>
-															<tr>
+													</c:forEach>
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-12 col-md-5">
+											<div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite">
+												<c:if test="${allcount == 0}">
+
+												</c:if>
+												<c:if test="${allcount > 0 }">
+													<c:if test="${shownumber >= allcount}">
+																	Showing ${datas.pagination.limitStart + 1} to ${allcount} of ${allcount}
+																</c:if>
+													<c:if test="${shownumber < allcount}">
+																	Showing ${datas.pagination.limitStart + 1} to ${datas.pagination.limitStart + 10} of ${allcount}
+																</c:if>
+												</c:if>
+											</div>
+										</div>
+										<div class="col-sm-12 col-md-7">
+											<div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
+												<ul class="pagination">
+													<c:if test="${datas.pagination.totalPageCount < 1}">
+													</c:if>
+													<c:if test="${datas.pagination.totalPageCount > 0}">
+														<c:forEach begin="${datas.pagination.startPage}" end="${datas.pagination.endPage}" var="num">
+															<c:if test="${param.page eq num}">
+																<li class="paginate_button page-item active"><a aria-controls="dataTable" data-dt-idx="${num}" class="page-link" href='<c:url value="/stock/stock_history?page=${num}&recordSize=${recordSize}&pageSize=${pageSize}&keyword=${param.keyword}&searchType=${param.searchType}"/>'>${num}</a></li>
+															</c:if>
+															<c:if test="${param.page ne num}">
+																<li class="paginate_button page-item"><a aria-controls="dataTable" data-dt-idx="${num}" class="page-link" href='<c:url value="/stock/stock_history?page=${num}&recordSize=${recordSize}&pageSize=${pageSize}&keyword=${param.keyword}&searchType=${param.searchType}"/>'>${num}</a></li>
+															</c:if>
+															
 														</c:forEach>
-													</tbody>
-												</table>
-												<div class="row">
-													<div class="col-sm-12 col-md-5">
-														<div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite">
-															<c:if test="${shownumber >= allcount}">
-												Showing ${datas.pagination.limitStart + 1} to ${allcount} of ${allcount}
-											</c:if>
-															<c:if test="${shownumber < allcount}">
-												Showing ${datas.pagination.limitStart + 1} to ${datas.pagination.limitStart + 10} of ${allcount}
-											</c:if>
-														</div>
-													</div>
-													<div class="col-sm-12 col-md-7">
-														<div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
-															<ul class="pagination">
-																<c:if test="${datas.pagination.totalPageCount < 1}">
-																	<li>0</li>
-																</c:if>
-																<c:if test="${datas.pagination.totalPageCount > 0}">
-																	<c:forEach begin="${datas.pagination.startPage}" end="${datas.pagination.endPage}" var="num">
-																		<li><a href='<c:url value="/stock/stock_history?page=${num}&recordSize=${recordSize}&pageSize=${pageSize}&keyword=${param.keyword}&searchType=${param.searchType}"/>'>${num}</a></li>
-																	</c:forEach>
-																</c:if>
-																<c:if test="${pagination.existPrevPage eq true}">
-																	<li><a href='<c:url value="/stock/stock_history?page=${datas.pagination.startPage-1}&recordSize=${recordSize}&pageSize=${pageSize}&keyword=${param.keyword}&searchType=${param.searchType}"/>'>이전</a></li>
-																</c:if>
-																<c:if test="${pagination.existNextPage eq true}">
-																	<li><a href='<c:url value="/stock/stock_history?page=${datas.pagination.endPage+1}&recordSize=${recordSize}&pageSize=${pageSize}&keyword=${param.keyword}&searchType=${param.searchType}"/>'>다음</a></li>
-																</c:if>
-														</div>
-													</div>
-												</div>
-											</form>
+													</c:if>
+													<c:if test="${pagination.existPrevPage eq true}">
+														<li class="paginate_button page-item"><a aria-controls="dataTable" data-dt-idx="${num}" class="page-link" href='<c:url value="/stock/stock_history?page=${datas.pagination.startPage-1}&recordSize=${recordSize}&pageSize=${pageSize}&keyword=${param.keyword}&searchType=${param.searchType}"/>'>이전</a></li>
+													</c:if>
+													<c:if test="${pagination.existNextPage eq true}">
+														<li class="paginate_button page-item next"><a aria-controls="dataTable" data-dt-idx="${num}" class="page-link" href='<c:url value="/stock/stock_history?page=${datas.pagination.endPage+1}&recordSize=${recordSize}&pageSize=${pageSize}&keyword=${param.keyword}&searchType=${param.searchType}"/>'>다음</a></li>
+													</c:if>
+												</ul>
+											</div>
 										</div>
 									</div>
 								</div>

@@ -1,0 +1,5 @@
+package com.example.rael.exception;
+
+public class ErrorResult {
+
+}

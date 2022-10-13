@@ -69,18 +69,4 @@ public class SecurityConfig{
         return users;
     }
     
-//    @Bean
-//    public InMemoryUserDetailsManager userDetailsService() {
-//        UserDetails user = User.withUsername("rael")
-//            .password("{noop}haul2")
-//            .roles("ADMIN")
-//            .build();
-//        return new InMemoryUserDetailsManager(user);
-//    }
-    
-//    @Bean
-//    public void authenticationManagerBuilder(AuthenticationManagerBuilder auth) {
-//    	auth.authenticationProvider(customAuthenticationProvider);
-//    }
-
 }

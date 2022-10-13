@@ -1495,6 +1495,10 @@ pre code {
   border-top: 1px solid #e3e6f0;
 }
 
+.table.thead.category, .table.tbody.product {
+  width: 200px;
+}
+
 .table thead th {
   vertical-align: bottom;
   border-bottom: 2px solid #e3e6f0;

@@ -1,6 +1,0 @@
-#Mybatis
-mybatis.mapper-locations = classpath:com/example/mapper/*.xml
-logging.level.org.srpingframework=debug
-logging.level.org.springframework.web=debug
-
-spring.datasource.driver-class-name=oracle.jdbc.OracleDriverspring.datasource.url=jdbc:oracle:this:@localhost:1521/xespring.datasource.username=test_user.datasource.passowrd=Haul2!@#

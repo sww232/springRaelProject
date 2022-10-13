@@ -9,31 +9,45 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class CustomAuthenticationProvider implements AuthenticationProvider{
 	
 	@Autowired
     private UserDetailsService userDetailsService;
+	
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 
     // 검쯩을 위한 구현
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-
+    	
         String username = authentication.getName();
         String password = (String)authentication.getCredentials();
+        log.info("================================================");
+        log.info(passwordEncoder.encode((String)authentication.getCredentials()));
+        log.info("================================================");
+        
         
         UserDetails user = userDetailsService.loadUserByUsername(username);
+        log.info("================================================");
+        log.info(user.getPassword());
+        log.info("================================================");
         
         // password 일치하지 않으면!
         if(!user.isEnabled()){
             throw new UsernameNotFoundException("UsernameNotFoundException");
         }
         
-        if(!password.equals(user.getPassword())) {
-        	throw new BadCredentialsException(username);
+        if(!passwordEncoder.matches(password, user.getPassword())) {
+        	throw new BadCredentialsException("BadCredentialsException");
         }
 
         return new UsernamePasswordAuthenticationToken(username, password, user.getAuthorities());

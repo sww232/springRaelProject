@@ -1,0 +1,38 @@
+디비 설정
+
+groupadd -g 1900 dba
+useradd -g dba -u 1900 ora19c
+passwd ora19c
+
+mkdir -p /app/ora19c/19c
+mkdir -p /app/oraInventory
+chown -R ora19c.dba /app/ora19c
+chown -R ora19c.dba /app/oraInventory
+chgrp -R dba /app
+chmod -R 755 /app
+ls -al /app
+
+vi /etc/hosts
+-> 192.168.10.135 DB19.itclass.co.kr DB19
+
+yum -y install ksh
+yum -y install libaio-devel
+yum -y install glibc-develyum install -y http://mirror.centos.org/centos/7/os/x86_64/Packages/compat-libcap1-1.10-7.el7.x86_64.rpm
+yum install -y http://mirror.centos.org/centos/7/os/x86_64/Packages/compat-libstdc++-33-3.2.3-72.el7.x86_64.rpm
+yum -y install gcc-c++
+yum install -y --nobest --skip-broken https://yum.oracle.com/repo/OracleLinux/OL7/latest/x86_64/getPackage/oracle-database-preinstall-19c-1.0-1.el7.x86_64.rpm
+
+rpm -Uvh oracle-database-preinstall-19c-1.0-1.el7.x86_64.rpm
+
+ora19c 계정
+vi .bash_profile
+export ORACLE_OWNER=ora19c
+export ORACLE_BASE=/app/ora19c
+export ORACLE_HOME=/app/ora19c/19c
+export TNS_ADMIN=$ORACLE_HOME/network/admin
+export ORACLE_SID=DB19
+export NLS_LANG=AMERICAN_AMERICA.AL32UTF8
+export ORACLE_HOSTNAME=DB19.itclass.co.kr
+export TMP=/tmp
+export TMPDIR=$TMP
+export PATH=$PATH:$ORACLE_HOME/bin:$ORACLE_HOME:/usr/bin:.

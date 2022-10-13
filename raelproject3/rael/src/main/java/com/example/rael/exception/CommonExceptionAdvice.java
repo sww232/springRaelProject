@@ -1,30 +1,41 @@
 package com.example.rael.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.ui.Model;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 @ControllerAdvice
-@Log4j2
-public class CommonExceptionAdvice {
+@Component
+@Slf4j
+public class CommonExceptionAdvice{
+	private static final Logger logger = LoggerFactory
+			.getLogger(CommonExceptionAdvice.class);
 	
 	@ExceptionHandler(Exception.class)
-	public String except(Exception ex, Model model)
+	public ResponseEntity<ErrorResult> exception(Exception ex)
 	{
-		log.error("Exception....." + ex.getMessage());
-		model.addAttribute("exception", ex);
-		log.error(model);
-		return "error_page";
+		logger.info("===============================================================");
+		logger.info(ex.toString());
+		logger.info("===============================================================");
+		
+		ErrorResult errorResult = new ErrorResult("USER-EX", ex.getMessage());
+		return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(NoHandlerFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public String handel404(NoHandlerFoundException ex) {
-		return "error";
+	public ModelAndView handel404(NoHandlerFoundException ex) {
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("404");
+		return mv;
 	}
 }

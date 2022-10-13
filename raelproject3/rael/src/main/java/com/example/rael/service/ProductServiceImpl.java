@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.rael.dto.ProductAllSelectDTO;
 import com.example.rael.dto.ProductDTO;
@@ -15,6 +16,7 @@ import com.example.rael.paging.Pagination;
 import com.example.rael.paging.PagingResponse;
 
 @Service
+@Transactional
 public class ProductServiceImpl implements ProductService{
 	
 	@Autowired

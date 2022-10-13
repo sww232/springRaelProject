@@ -370,7 +370,13 @@
 												</c:if>
 												<c:if test="${datas.pagination.totalPageCount > 0}">
 													<c:forEach begin="${datas.pagination.startPage}" end="${datas.pagination.endPage}" var="num">
+													<c:if test="${param.page eq num}">
+														<li class="paignate_button page-item active"><a aria-controls="dataTable" data-dt-idx="${num}" class="page-link" href='<c:url value="/product/product_update_detail?categoryBox=${categoryBox}&page=${num}&recordSize=${recordSize}&pageSize=${pageSize}&keyword=${param.keyword}&searchType=${param.searchType}"/>'>${num}</a></li>
+													</c:if>
+													<c:if test="${param.page ne num}">
 														<li class="paignate_button page-item"><a aria-controls="dataTable" data-dt-idx="${num}" class="page-link" href='<c:url value="/product/product_update_detail?categoryBox=${categoryBox}&page=${num}&recordSize=${recordSize}&pageSize=${pageSize}&keyword=${param.keyword}&searchType=${param.searchType}"/>'>${num}</a></li>
+													</c:if>
+														
 													</c:forEach>
 												</c:if>
 												<c:if test="${datas.pagination.existNextPage eq true}">

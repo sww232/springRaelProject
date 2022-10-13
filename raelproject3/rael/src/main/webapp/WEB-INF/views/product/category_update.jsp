@@ -328,14 +328,18 @@
 											<div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
 												<ul class="pagination">
 													<c:if test="${datas.pagination.totalPageCount < 1}">
-														<li>0</li>
 													</c:if>
 													<c:if test="${datas.pagination.existPrevPage eq true}">
 														<li class="paginate_button page-item previous"><a aria-controls="dataTable" data-dt-idx="${num}" class="page-link" href='<c:url value="/product/category_update?page=${datas.pagination.startPage-1}&recordSize=${recordSize}&pageSize=${pageSize}&categoryBox=${categoryBox}"/>'>PREVIOUS</a></li>
 													</c:if>
 													<c:if test="${datas.pagination.totalPageCount > 0}">
 														<c:forEach begin="${datas.pagination.startPage}" end="${datas.pagination.endPage}" var="num">
-															<li class="paignate_button page-item"><a aria-controls="dataTable" data-dt-idx="${num}" class="page-link" href='<c:url value="/product/category_update?page=${num}&recordSize=${recordSize}&pageSize=${pageSize}0&categoryBox=${categoryBox}"/>'>${num}</a></li>
+															<c:if test="${param.page eq num}">
+																<li class="paignate_button page-item active"><a aria-controls="dataTable" data-dt-idx="${num}" class="page-link" href='<c:url value="/product/category_update?page=${num}&recordSize=${recordSize}&pageSize=${pageSize}0&categoryBox=${categoryBox}"/>'>${num}</a></li>
+															</c:if>
+															<c:if test="${param.page ne num}">
+																<li class="paignate_button page-item"><a aria-controls="dataTable" data-dt-idx="${num}" class="page-link" href='<c:url value="/product/category_update?page=${num}&recordSize=${recordSize}&pageSize=${pageSize}0&categoryBox=${categoryBox}"/>'>${num}</a></li>
+															</c:if>
 														</c:forEach>
 													</c:if>
 													<c:if test="${datas.pagination.existNextPage eq true}">

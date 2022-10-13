@@ -3,7 +3,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="">
 <meta name="author" content="">
@@ -29,7 +28,6 @@
 <script src="/js/sb-admin-2.min.js"></script>
 
 <!-- Page level plugins -->
-<script src="/vendor/datatables/jquery.dataTables.min.js"></script>
 <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
 <!-- Page level custom scripts -->
@@ -340,30 +338,40 @@
 									<div class="row">
 										<div class="col-sm-12 col-md-5">
 											<div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite">
-												<c:if test="${shownumber >= allcount}">
+												<c:if test="${allcount == '0'}">
+
+												</c:if>
+												<c:if test="${allcount > 0 }">
+													<c:if test="${shownumber >= allcount}">
 														Showing ${datas.pagination.limitStart + 1} to ${allcount} of ${allcount}
 													</c:if>
-												<c:if test="${shownumber < allcount}">
+													<c:if test="${shownumber < allcount}">
 														Showing ${datas.pagination.limitStart + 1} to ${datas.pagination.limitStart + 10} of ${allcount}
 													</c:if>
+												</c:if>
 											</div>
 										</div>
 										<div class="col-sm-12 col-md-7">
 											<div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
 												<ul class="pagination">
 													<c:if test="${datas.pagination.totalPageCount < 1}">
-														<li>0</li>
 													</c:if>
 													<c:if test="${datas.pagination.existPrevPage eq true}">
-														<li><a href='<c:url value="/stock/stock_select?page=${datas.pagination.startPage-1}&recordSize=${recordSize}&pageSize=${pageSize}&categoryBox=${categoryBox}&keyword=${param.keyword}&searchType=${param.searchType}"/>'>이전</a></li>
+														<li class="paginate_button page-item previous"><a aria-controls="dataTable" data-dt-idx="${num}" class="page-link" href='<c:url value="/stock/stock_select?page=${datas.pagination.startPage-1}&recordSize=${recordSize}&pageSize=${pageSize}&categoryBox=${categoryBox}&keyword=${param.keyword}&searchType=${param.searchType}"/>'>이전</a></li>
 													</c:if>
 													<c:if test="${datas.pagination.totalPageCount > 0}">
 														<c:forEach begin="${datas.pagination.startPage}" end="${datas.pagination.endPage}" var="num">
-															<li><a href='<c:url value="/stock/stock_select?page=${num}&recordSize=${recordSize}&pageSize=${pageSize}&categoryBox=${categoryBox}&keyword=${param.keyword}&searchType=${param.searchType}"/>'>${num}</a></li>
+															<c:if test="${param.page eq num}">
+																<li class="paignate_button page-item active"><a aria-controls="dataTable" data-dt-idx="${num}" class="page-link" href='<c:url value="/stock/stock_select?page=${num}&recordSize=${recordSize}&pageSize=${pageSize}&categoryBox=${categoryBox}&keyword=${param.keyword}&searchType=${param.searchType}"/>'>${num}</a></li>
+															</c:if>
+															<c:if test="${param.page ne num}">
+																<li class="paignate_button page-item"><a aria-controls="dataTable" data-dt-idx="${num}" class="page-link" href='<c:url value="/stock/stock_select?page=${num}&recordSize=${recordSize}&pageSize=${pageSize}&categoryBox=${categoryBox}&keyword=${param.keyword}&searchType=${param.searchType}"/>'>${num}</a></li>
+															</c:if>
+															
 														</c:forEach>
 													</c:if>
 													<c:if test="${datas.pagination.existNextPage eq true}">
-														<li><a href='<c:url value="/stock/stock_select?page=${datas.pagination.endPage+1}&recordSize=${recordSize}&pageSize=${pageSize}&categoryBox=${categoryBox}&keyword=${param.keyword}&searchType=${param.searchType}"/>'>다음</a></li>
+														<li class="paginate_button page-item next"><a aria-controls="dataTable" data-dt-idx="${num}" class="page-link" href='<c:url value="/stock/stock_select?page=${datas.pagination.endPage+1}&recordSize=${recordSize}&pageSize=${pageSize}&categoryBox=${categoryBox}&keyword=${param.keyword}&searchType=${param.searchType}"/>'>다음</a></li>
 													</c:if>
 												</ul>
 											</div>

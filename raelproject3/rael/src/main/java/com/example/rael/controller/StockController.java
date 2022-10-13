@@ -58,8 +58,19 @@ public class StockController {
 	}
 	
 	@RequestMapping("/stock_history")
-	public ModelAndView Stock_History(@ModelAttribute("param") SearchDTO param) {
+	public ModelAndView Stock_History(	@ModelAttribute("param") SearchDTO param,
+										@RequestParam(value="categoryBox" , required=false, defaultValue="defaultValue") String selected) {
 		ModelAndView mv = new ModelAndView();
+		
+		if(selected.equals("defaultValue")) {
+			
+		}
+		else {
+			String[] a = selected.split("/",2);
+			
+			param.setCategorynum(Integer.parseInt(a[0]));
+		}
+		
 		PagingResponse<StockHistoryDTO> datas = stockService.SelectStockHistory(param);
 		List<String> categorynums = productService.SelectCategoryNums();
 		
@@ -68,14 +79,26 @@ public class StockController {
 		mv.addObject("page",searchDTO.getPage());
 		mv.addObject("pageSize",searchDTO.getPageSize());
 		mv.addObject("recordSize",searchDTO.getRecordSize());
+		
 		mv.addObject("categorynums", categorynums);
 		mv.addObject("datas", datas);
 		mv.setViewName("stock/stock_history");
 		return mv;
 	}
 	@RequestMapping("/stock_history_cancel")
-	public ModelAndView Stock_History_Cancel(@ModelAttribute("param") SearchDTO param) {
+	public ModelAndView Stock_History_Cancel(	@ModelAttribute("param") SearchDTO param,
+												@RequestParam(value="categoryBox" , required=false, defaultValue="defaultValue") String selected) {
 		ModelAndView mv = new ModelAndView();
+		
+		if(selected.equals("defaultValue")) {
+		}
+		else {
+			String[] a = selected.split("/",2);
+			
+			param.setCategorynum(Integer.parseInt(a[0]));
+		}
+		
+		
 		PagingResponse<StockHistoryDTO> datas = stockService.SelectStockHistory(param);
 		List<String> categorynums = productService.SelectCategoryNums();
 		

@@ -31,7 +31,6 @@
 <script src="/js/sb-admin-2.min.js"></script>
 
 <!-- Page level plugins -->
-<script src="/vendor/datatables/jquery.dataTables.min.js"></script>
 <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
 <!-- Page level custom scripts -->
@@ -158,7 +157,7 @@
 				<div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
 					<div class="bg-white py-2 collapse-inner rounded">
 						<h6 class="collapse-header">상품 탭</h6>
-						<a class="collapse-item" href="/product/all_select?page=${page}&recordSize=10&pageSize=10">상품 조회</a> <a class="collapse-item" href="#" data-toggle="modal" data-target="#moaModal1"> <i class="fas fa-arrow-right"></i>상품 등록
+						<a class="collapse-item" href="/product/all_select?page=${page}&recordSize=${recordSize}&pageSize=${pageSize}">상품 조회</a> <a class="collapse-item" href="#" data-toggle="modal" data-target="#moaModal1"> <i class="fas fa-arrow-right"></i>상품 등록
 						</a> <a class="collapse-item" href="#" data-toggle="modal" data-target="#moaModal2"> <i class="fas fa-arrow-right"></i>상품 추가 등록
 						</a> <a class="collapse-item" href="#" data-toggle="modal" data-target="#moaModal3"> <i class="fas fa-arrow-right"></i>상품명/상세정보 수정
 						</a>
@@ -180,9 +179,11 @@
 						<a class="collapse-item" href="/stock/stock_select?page=${page}&recordSize=${recordSize}&pageSize=${pageSize}">재고 조회 및 입/출고</a>
 						<div class="collapse-divider"></div>
 						<h6 class="collapse-header">재고 입/출고</h6>
-						<a class="collapse-item" href="/stock/stock_history?page=${page}&recordSize=${recordSize}&pageSize=${pageSize}">내역</a> <a class="collapse-item" href="/stock/stock_history_cancel?page=${page}&recordSize=10&pageSize=10">취소</a>
+						<a class="collapse-item" href="/stock/stock_history?page=${page}&recordSize=${recordSize}&pageSize=${pageSize}">내역</a> 
+						<a class="collapse-item" href="/stock/stock_history_cancel?page=${page}&recordSize=${recordSize}&pageSize=${pageSize}">취소</a>
 					</div>
-				</div></li>
+				</div>
+			</li>
 
 			<!-- Divider -->
 			<hr class="sidebar-divider d-none d-md-block">
@@ -291,10 +292,10 @@
 											<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
 												<thead>
 													<tr>
-														<th>Category Name</th>
+														<th class="category">Category Name</th>
 														<th>Product No</th>
 														<th>Product Detail No</th>
-														<th>Product Name</th>
+														<th class="product">Product Name</th>
 														<th>Vendor</th>
 														<th>Company</th>
 														<th>Color</th>
@@ -330,10 +331,10 @@
 												<tbody>
 													<c:forEach items="${datas.list}" var="data">
 														<tr>
-															<td>${data.PRODUCTCATEGORYNAME}</td>
+															<td class="category">${data.PRODUCTCATEGORYNAME}</td>
 															<td>${data.PRODUCTNUM}</td>
 															<td>${data.PRODUCTBYNUM}</td>
-															<td>${data.PRODUCTNAME}</td>
+															<td class="product">${data.PRODUCTNAME}</td>
 															<td>${data.PRODUCTVENDOR}</td>
 															<td>${data.PRODUCTCOMPANY}</td>
 															<td>${data.PRODUCTCOLOR}</td>
@@ -344,7 +345,7 @@
 															<td>${data.PRODUCTVOLT}</td>
 															<td>${data.APPENDDATE}</td>
 															<td>${data.UPDATEDATE}</td>
-															<td>${data.PRODUCTDESCRIPTION}</td>
+															<td style="font-size:1px">${data.PRODUCTDESCRIPTION}</td>
 														<tr>
 													</c:forEach>
 												</tbody>
@@ -354,26 +355,36 @@
 									<div class="row">
 										<div class="col-sm-12 col-md-5">
 											<div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite">
-												<c:if test="${shownumber >= allcount}">
-												Showing ${datas.pagination.limitStart + 1} to ${allcount} of ${allcount}
-											</c:if>
-												<c:if test="${shownumber < allcount}">
-												Showing ${datas.pagination.limitStart + 1} to ${datas.pagination.limitStart + 10} of ${allcount}
-											</c:if>
+												<c:if test="${allcount == '0'}">
+
+												</c:if>
+												<c:if test="${allcount > 0 }">
+													<c:if test="${shownumber >= allcount}">
+														Showing ${datas.pagination.limitStart + 1} to ${allcount} of ${allcount}
+													</c:if>
+													<c:if test="${shownumber < allcount}">
+														Showing ${datas.pagination.limitStart + 1} to ${datas.pagination.limitStart + 10} of ${allcount}
+													</c:if>
+												</c:if>
 											</div>
 										</div>
 										<div class="col-sm-12 col-md-7">
 											<div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
 												<ul class="pagination">
 													<c:if test="${datas.pagination.totalPageCount < 1}">
-														<li>0</li>
 													</c:if>
 													<c:if test="${datas.pagination.existPrevPage eq true}">
 														<li class="paginate_button page-item previous"><a aria-controls="dataTable" data-dt-idx="${num}" class="page-link" href='<c:url value="/product/all_select?page=${datas.pagination.startPage-1}&recordSize=10&pageSize=10&categoryBox=${categoryBox}&keyword=${param.keyword}&searchType=${param.searchType}"/>'>PREVIOUS</a></li>
 													</c:if>
 													<c:if test="${datas.pagination.totalPageCount > 0}">
 														<c:forEach begin="${datas.pagination.startPage}" end="${datas.pagination.endPage}" var="num">
-															<li class="paignate_button page-item"><a aria-controls="dataTable" data-dt-idx="${num}" class="page-link" href='<c:url value="/product/all_select?page=${num}&recordSize=10&pageSize=10&categoryBox=${categoryBox}&keyword=${param.keyword}&searchType=${param.searchType}"/>'>${num}</a></li>
+															<c:if test="${param.page eq num}">
+																<li class="paignate_button page-item active"><a aria-controls="dataTable" data-dt-idx="${num}" class="page-link" href='<c:url value="/product/all_select?page=${num}&recordSize=10&pageSize=10&categoryBox=${categoryBox}&keyword=${param.keyword}&searchType=${param.searchType}"/>'>${num}</a></li>
+															</c:if>
+															<c:if test="${param.page ne num}">
+																<li class="paignate_button page-item"><a aria-controls="dataTable" data-dt-idx="${num}" class="page-link" href='<c:url value="/product/all_select?page=${num}&recordSize=10&pageSize=10&categoryBox=${categoryBox}&keyword=${param.keyword}&searchType=${param.searchType}"/>'>${num}</a></li>
+															</c:if>
+															
 														</c:forEach>
 													</c:if>
 													<c:if test="${datas.pagination.existNextPage eq true}">
