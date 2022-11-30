@@ -127,7 +127,7 @@
 					<i class="fas fa-laugh-wink"></i>
 				</div>
 
-				<div class="sidebar-brand-text mx-3">RAEL</div>
+				<div class="sidebar-brand-text mx-3"></div>
 			</a>
 
 			<!-- Divider -->
