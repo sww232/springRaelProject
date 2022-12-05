@@ -1,5 +1,0 @@
-package com.example.rael.security;
-
-public class UserDetailService extends UserDetailsService{
-
-}

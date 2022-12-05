@@ -303,7 +303,7 @@ public class ProductController {
 		re.addAttribute("pageSize",searchDTO.getPageSize());
 		re.addAttribute("recordSize",searchDTO.getRecordSize());
 		
-		mv.setViewName("redirect:/product/product_insert");
+		mv.setViewName("redirect:/product/all_select");
 		
 		return mv;
 	}

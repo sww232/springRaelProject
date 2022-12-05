@@ -1,5 +1,0 @@
-package com.example.rael.mapper;
-
-public class UserMapper {
-	UserDTO getUserInfo(String userid);
-}

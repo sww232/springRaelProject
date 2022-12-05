@@ -122,7 +122,7 @@
 				<div class="sidebar-brand-icon rotate-n-15">
 					<i class="fas fa-laugh-wink"></i>
 				</div>
-				<div class="sidebar-brand-text mx-3">RAEL</div>
+				<div class="sidebar-brand-text mx-3"></div>
 			</a>
 
 			<!-- Divider -->
@@ -256,7 +256,7 @@
 				<!-- End of Topbar -->
 				<div class="card shadow mb-4">
 					<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-						<h6 class="m-0 font-weight-bold text-primary">상풍 등록 양식</h6>
+						<h6 class="m-0 font-weight-bold text-primary">상품 등록 양식</h6>
 					</div>
 					<div class="card-body">
 						<p>상품 번호 및 상품 상세 번호는 변경 불가!
@@ -275,19 +275,19 @@
 						상품상세번호:
 						<code>${detaillastbynum}</code>
 						<form method="POST" action="/product/product_insert/INSERT">
-							<input type="hidden" value="${categoryBox1}" name="categoryBox" readonly>
+							<input type="hidden" value=${categorynum} name="categoryBox" readonly>
 							<input type="hidden" value="${categoryname}" name="product category name" readonly> <input type="hidden" value="${productnum}" name="product num" readonly> <input type="hidden" value=${detaillastbynum } name="product detail num" readonly> <input type="hidden" value=${categorynum } name="product category num" readonly>
 
 							<ul>
 
 								<li>
 									<div class="input-group">
-										<input type="text" class="form-control bg-light border-0 small" name="product name" placeholder="상품명을 입력해주세요.(필수항목)">
+										<input type="text" class="form-control bg-light border-0 small" name="product name" placeholder="상품명을 입력해주세요.(필수항목)" value="">
 									</div>
 								</li>
 								<li>
 									<div class="input-group">
-										<input type="text" class="form-control bg-light border-0 small" name="product company" placeholder="제조사를 입력해주세요.(필수항목)">
+										<input type="text" class="form-control bg-light border-0 small" name="product company" placeholder="제조사를 입력해주세요.(필수항목)" value="">
 									</div>
 								</li>
 								<li>
@@ -302,32 +302,32 @@
 								</li>
 								<li>
 									<div class="input-group">
-										<input type="text" class="form-control bg-light border-0 small" value="" name="product vendor" placeholder="판매처를 작성해 주세요.(EX. NAVER)">
+										<input type="text" class="form-control bg-light border-0 small" value="" name="product vendor" placeholder="판매처를 작성해 주세요.(EX. NAVER)" value="">
 									</div>
 								</li>
 								<li>
 									<div class="input-group">
-										<input type="text" class="form-control bg-light border-0 small" value="" name="product color" placeholder="색상을 입력해주세요. (EX. RED)">
+										<input type="text" class="form-control bg-light border-0 small" value="" name="product color" placeholder="색상을 입력해주세요. (EX. RED)" value="">
 									</div>
 								</li>
 								<li>
 									<div class="input-group">
-										<input type="text" class="form-control bg-light border-0 small" value="" name="product length" placeholder="길이를 입력해주세요. (EX. 22mm)">
+										<input type="text" class="form-control bg-light border-0 small" value="" name="product length" placeholder="길이를 입력해주세요. (EX. 22mm)" value="">
 									</div>
 								</li>
 								<li>
 									<div class="input-group">
-										<input type="text" class="form-control bg-light border-0 small" value="" name="product weight" placeholder="무게를 입력해주세요. (EX. 0.5g)">
+										<input type="text" class="form-control bg-light border-0 small" value="" name="product weight" placeholder="무게를 입력해주세요. (EX. 0.5g)" value="">
 									</div>
 								</li>
 								<li>
 									<div class="input-group">
-										<input type="text" class="form-control bg-light border-0 small" value="" name="product battery" placeholder="사용전지/배터리를 입력해주세요. (EX. BR310)">
+										<input type="text" class="form-control bg-light border-0 small" value="" name="product battery" placeholder="사용전지/배터리를 입력해주세요. (EX. BR310)" value="">
 									</div>
 								</li>
 								<li>
 									<div class="input-group">
-										<input type="text" class="form-control bg-light border-0 small" value="" name="product description" placeholder="부가 설명을 적어주세요.">
+										<input type="text" class="form-control bg-light border-0 small" value="" name="product description" placeholder="부가 설명을 적어주세요." value="">
 									</div>
 								</li>
 

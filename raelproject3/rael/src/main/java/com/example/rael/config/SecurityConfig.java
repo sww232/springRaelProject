@@ -39,7 +39,7 @@ public class SecurityConfig{
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
-			.authorizeRequests()
+			.authorizeRequests().antMatchers("/css/**").permitAll()
 				.mvcMatchers("/login").permitAll().
 				anyRequest().authenticated();
 		
@@ -57,6 +57,9 @@ public class SecurityConfig{
 			.maximumSessions(1)
 			.maxSessionsPreventsLogin(false)
 			.expiredUrl("/login");
+		
+		http
+			.csrf().disable();
 
 		return http.build();
 	}

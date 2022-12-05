@@ -1,7 +1,0 @@
-package com.example.rael.dto;
-
-public class UserDTO {
-	private String id;
-	private String password;
-	private String auth;
-}

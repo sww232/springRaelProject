@@ -49,7 +49,7 @@
 										<div class="form-group">
 											<input type="password" class="form-control form-control-user" id="pw" name="pw" placeholder="Password">
 										</div>
-										<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+										<!--  input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/-->
 										<button type="submit" class="btn btn-primary btn-user btn-block"> Login </button>
 									</form>
 								</div>

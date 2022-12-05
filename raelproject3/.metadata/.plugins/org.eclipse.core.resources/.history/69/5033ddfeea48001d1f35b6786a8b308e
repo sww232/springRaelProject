@@ -1,7 +1,0 @@
-package com.example.rael.service;
-
-import com.example.rael.dto.UserDTO;
-
-public interface UserService {
-	public UserDTO Login(String id);
-}

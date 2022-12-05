@@ -119,7 +119,7 @@
 				<div class="sidebar-brand-icon rotate-n-15">
 					<i class="fas fa-laugh-wink"></i>
 				</div>
-				<div class="sidebar-brand-text mx-3">RAEL</div>
+				<div class="sidebar-brand-text mx-3"></div>
 			</a>
 
 			<!-- Divider -->
@@ -241,11 +241,17 @@
 						<!-- Nav Item - User Information -->
 						<li class="nav-item dropdown no-arrow"><a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="mr-2 d-none d-lg-inline text-gray-600 small">라엘이</span> <img class="img-profile rounded-circle" src="img/undraw_rocket.svg">
 						</a> <!-- Dropdown - User Information -->
+						<form id="logout_form" method="post" action="/logout">
 							<div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
 								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal"> <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> Logout
-								</a>
-							</div></li>
+								
+									<a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal" type="submit" onclick="document.getElementById('logout_form').submit();"> 
+									<i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> 
+										Logout
+									</a>
+								
+							</div>
+						</form></li>
 
 					</ul>
 
@@ -258,14 +264,9 @@
 						<h6 class="m-0 font-weight-bold text-primary">메인</h6>
 					</div>
 					<div class="card-body">
-						<p>${page} ${page}
 						<div class="my-2"></div>
-						${recordSize} ${recordSize}
 						<div class="my-2"></div>
-						${pageSize} ${pageSize}
 						<div class="my-2"></div>
-						왜 안 돼
-						</p>
 					</div>
 				</div>
 			</div>
