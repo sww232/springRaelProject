@@ -1,5 +1,5 @@
 # springRaelProject
-Version : Spring Boot 2.7.3/Java 17/(외부)Apache-tomcat 9.0.65/Gradle 17
+Version : Spring Boot 2.7.3/Java 17/(외부)Apache-tomcat 9.0.65/Gradle 7
 
 Project Period : 1 month
 
