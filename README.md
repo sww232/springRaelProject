@@ -1,9 +1,13 @@
 # springRaelProject
 Version : Spring Boot 2.7.3/Java 18/(외부)Apache-tomcat 9.0.65/Gradle 17
+
 Project Period : 1 month
 
+
 DB : Oracle 19.3.0.0
+
 Front-End : JSP
+
 Back-End : Java
 
 
